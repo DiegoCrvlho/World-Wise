@@ -1,5 +1,17 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useCities } from "../Context/CitiesContext";
 import styles from "./City.module.css";
+import { useEffect } from "react";
+import Spinner from "./Spinner";
+
+const flagemojiToPNG = (flag) => {
+  var countryCode = Array.from(flag, (codeUnit) => codeUnit.codePointAt())
+    .map((char) => String.fromCharCode(char - 127397).toLowerCase())
+    .join("");
+  return (
+    <img src={`https://flagcdn.com/24x18/${countryCode}.png`} alt="flag" />
+  );
+};
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
@@ -10,32 +22,27 @@ const formatDate = (date) =>
   }).format(new Date(date));
 
 function City() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const lat = searchParams.get("lat");
-  const lng = searchParams.get("lng");
-
   const { id } = useParams();
-  // TEMP DATA
-  const currentCity = {
-    cityName: "Lisbon",
-    emoji: "🇵🇹",
-    date: "2027-10-31T15:59:59.138Z",
-    notes: "My favorite city so far!",
-  };
+  const { getCityById, currentCity, isLoading } = useCities();
+  console.log(currentCity);
+
+  useEffect(
+    function () {
+      getCityById(id);
+    },
+    [id]
+  );
 
   const { cityName, emoji, date, notes } = currentCity;
 
+  if (isLoading) return <Spinner />;
+
   return (
     <div className={styles.city}>
-      <h1>City {id}</h1>
-      <p>
-        Position: {lat}, {lng}
-      </p>
-      {/* <div className={styles.row}>
+      <div className={styles.row}>
         <h6>City name</h6>
         <h3>
-          <span>{emoji}</span> {cityName}
+          <span>{emoji ? flagemojiToPNG(emoji) : ""}</span> {cityName}
         </h3>
       </div>
 
@@ -62,9 +69,7 @@ function City() {
         </a>
       </div>
 
-      <div>
-        <ButtonBack />
-      </div> */}
+      <div>{/* <ButtonBack /> */}</div>
     </div>
   );
 }
