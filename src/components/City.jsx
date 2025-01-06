@@ -3,6 +3,7 @@ import { useCities } from "../Context/CitiesContext";
 import styles from "./City.module.css";
 import { useEffect } from "react";
 import Spinner from "./Spinner";
+import BackButton from "./BackButton";
 
 const flagemojiToPNG = (flag) => {
   var countryCode = Array.from(flag, (codeUnit) => codeUnit.codePointAt())
@@ -24,7 +25,7 @@ const formatDate = (date) =>
 function City() {
   const { id } = useParams();
   const { getCityById, currentCity, isLoading } = useCities();
-  console.log(currentCity);
+  // console.log(currentCity);
 
   useEffect(
     function () {
@@ -69,7 +70,9 @@ function City() {
         </a>
       </div>
 
-      <div>{/* <ButtonBack /> */}</div>
+      <div>
+        <BackButton>Back</BackButton>
+      </div>
     </div>
   );
 }
