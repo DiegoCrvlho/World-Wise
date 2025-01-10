@@ -10,7 +10,10 @@ import {
 } from "react-leaflet";
 import { useCities } from "../Context/CitiesContext";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useGeolocation } from "../Hooks/useGeolocation";
+import Button from "./Button";
+import { useGeolocationPosition } from "../Hooks/useGeolocationPosition";
 
 const flagemojiToPNG = (flag) => {
   var countryCode = Array.from(flag, (codeUnit) => codeUnit.codePointAt())
@@ -24,10 +27,21 @@ const flagemojiToPNG = (flag) => {
 function Map() {
   const { cities } = useCities();
   const [mapPosition, setMapPosition] = useState([40, 0]);
+  const {
+    isLoading: isLoadingPosition,
+    position: positionGeolocation,
+    getPosition,
+  } = useGeolocation();
 
-  const [searchParams] = useSearchParams();
-  const mapLat = searchParams.get("lat");
-  const mapLng = searchParams.get("lng");
+  const { mapLat, mapLng } = useGeolocationPosition();
+
+  useEffect(
+    function () {
+      if (positionGeolocation)
+        setMapPosition([positionGeolocation.lat, positionGeolocation.lng]);
+    },
+    [positionGeolocation]
+  );
 
   useEffect(
     function () {
@@ -44,6 +58,11 @@ function Map() {
         scrollWheelZoom={true}
         className={styles.mapContainer}
       >
+        {!positionGeolocation && (
+          <Button type="position" onClick={getPosition}>
+            {isLoadingPosition ? "Loading..." : "use location"}
+          </Button>
+        )}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"

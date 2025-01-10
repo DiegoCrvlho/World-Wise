@@ -4,7 +4,7 @@ function Message({ message }) {
   console.log(message);
   return (
     <p className={styles.message}>
-      <span role="img">👋</span> {message}
+      <span role="img"></span> {message}
     </p>
   );
 }
