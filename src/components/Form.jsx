@@ -8,6 +8,10 @@ import { useGeolocationPosition } from "../Hooks/useGeolocationPosition";
 import Spinner from "./Spinner";
 import Message from "../../starter/components/Message";
 import Button from "./Button";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useCities } from "../Context/CitiesContext";
+import { useNavigate } from "react-router-dom";
 
 export function convertToEmoji(countryCode) {
   const codePoints = countryCode
@@ -35,9 +39,12 @@ function Form() {
   const [isLoadingGeolocation, setIsLoadingGeolocation] = useState(false);
   const [emoji, setEmoji] = useState("");
   const [error, setError] = useState("");
-
+  const { createCity } = useCities();
+  const navigate = useNavigate();
   useEffect(
     function () {
+      if (!lat && !lng) return;
+
       async function fetchGeolocation() {
         try {
           setIsLoadingGeolocation(true);
@@ -71,8 +78,28 @@ function Form() {
 
   if (error) return <Message message={error} />;
 
+  if (!lat && !lng)
+    return <Message message="Click somewhere else on the map 😉" />;
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!cityName || !date) return;
+
+    const newCity = {
+      cityName,
+      countryName,
+      emoji,
+      date,
+      notes,
+      position: { lat, lng },
+    };
+    await createCity(newCity);
+    navigate("/app/cities");
+  }
+
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input
@@ -85,10 +112,16 @@ function Form() {
 
       <div className={styles.row}>
         <label htmlFor="date">When did you go to {cityName}?</label>
-        <input
+        {/* <input
           id="date"
           onChange={(e) => setDate(e.target.value)}
           value={date}
+        /> */}
+        <DatePicker
+          id="date"
+          onChange={(date) => setDate(date)}
+          selected={date}
+          dateFormat="dd/MM/yyyy"
         />
       </div>
 
