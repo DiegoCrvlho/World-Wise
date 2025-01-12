@@ -26,7 +26,7 @@ const flagemojiToPNG = (flag) => {
 
 function Map() {
   const { cities } = useCities();
-  const [mapPosition, setMapPosition] = useState([40, 0]);
+  const [mapPosition, setMapPosition] = useState([51.505, -0.09]);
   const {
     isLoading: isLoadingPosition,
     position: positionGeolocation,
@@ -52,17 +52,17 @@ function Map() {
 
   return (
     <div className={styles.mapContainer}>
+      {!positionGeolocation && (
+        <Button type="position" onClick={getPosition}>
+          {isLoadingPosition ? "Loading..." : "use location"}
+        </Button>
+      )}
       <MapContainer
         center={mapPosition}
-        zoom={13}
+        zoom={6}
         scrollWheelZoom={true}
         className={styles.mapContainer}
       >
-        {!positionGeolocation && (
-          <Button type="position" onClick={getPosition}>
-            {isLoadingPosition ? "Loading..." : "use location"}
-          </Button>
-        )}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"

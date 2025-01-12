@@ -37,15 +37,27 @@
       "id": "98443197"
     },
     {
-      "id": "d97d",
-      "cityName": "Teruel",
-      "countryName": "Spain",
-      "emoji": "🇪🇸",
-      "date": "2025-01-10T23:48:57.944Z",
-      "notes": "muito bom\n",
+      "id": "6bc4",
+      "cityName": "Brasilia",
+      "countryName": "Brazil",
+      "emoji": "🇧🇷",
+      "date": "2025-01-12T21:35:39.923Z",
+      "notes": "",
       "position": {
-        "lat": "40.35513386015343",
-        "lng": "-1.1152361816292047"
+        "lat": "-15.919073517982413",
+        "lng": "-47.78400088195353"
+      }
+    },
+    {
+      "id": "f6be",
+      "cityName": "Paris",
+      "countryName": "France",
+      "emoji": "🇫🇷",
+      "date": "2025-01-12T21:46:34.638Z",
+      "notes": "",
+      "position": {
+        "lat": "48.83579746243093",
+        "lng": "2.3459558931600815"
       }
     }
   ]
